@@ -1,5 +1,7 @@
 // eslint-disable-next-line import/no-cycle
-import { sampleRUM, fetchPlaceholders } from './lib-franklin.js';
+import { sampleRUM, fetchPlaceholders, toCamelCase } from './lib-franklin.js';
+
+import { loadMartechDelayed, loadMartechLazy } from './neutrino.js';
 
 document.dispatchEvent(new Event('franklin.delayed_begin'));
 
@@ -11,4 +13,5 @@ try {
   await fetchPlaceholders();
 } catch (error) { /* empty */ }
 
+await loadMartechDelayed({sampleRUM, toCamelCase});
 document.dispatchEvent(new Event('franklin.delayed_completed'));

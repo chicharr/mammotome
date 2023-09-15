@@ -16,12 +16,15 @@ import {
   getMetadata,
   toClassName,
   decorateSupScriptInTextBelow,
+  toCamelCase,
 } from './lib-franklin.js';
 
 import {
   decorateHistorySection,
   observeHistorySection,
 } from './lib-history-section.js';
+
+import { loadMartechDelayed, loadMartechLazy } from './neutrino.js';
 
 const LCP_BLOCKS = ['hero', 'product-reference', 'product-support']; // add your LCP blocks to the list
 window.hlx.RUM_GENERATION = 'mammotome'; // add your RUM generation information here
@@ -334,6 +337,7 @@ async function loadLazy(doc) {
     getMetadata,
     toClassName,
   };
+  await loadMartechLazy({sampleRUM, toCamelCase});
   // eslint-disable-next-line import/no-relative-packages
   const { initConversionTracking } = await import('../plugins/rum-conversion/src/index.js');
   await initConversionTracking.call(context, document, '');
@@ -344,7 +348,7 @@ async function loadLazy(doc) {
   document.dispatchEvent(new Event('franklin.loadLazy_completed'));
 }
 
-// google tag manager
+/* google tag manager
 function loadGTM() {
   if (window.location.hostname.includes('localhost') || document.location.hostname.includes('.hlx.page')) {
     return;
@@ -373,14 +377,14 @@ function loadGTM() {
   });
   `;
   document.head.prepend(scriptTag);
-}
+} */
 
 /**
  * Loads everything that happens a lot later,
  * without impacting the user experience.
  */
 function loadDelayed() {
-  window.setTimeout(() => loadGTM(), 500);
+  //window.setTimeout(() => loadGTM(), 500);
   // eslint-disable-next-line import/no-cycle
   window.setTimeout(() => import('./delayed.js'), 3000);
   // load anything that can be postponed to the latest here
